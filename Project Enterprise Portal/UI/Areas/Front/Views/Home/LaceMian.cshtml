@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "云阿拉丁商务:文章详情";
+    Layout = "~/Views/_LayoutPage_Front.cshtml";
+}
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <img src="~/images/demo3.jpg" />
+    </div>
+</div>
+
+<!-- 文章 -->
+<div class="comarticle">
+    <div class="cg">
+        @{
+            foreach (var art in ViewBag.articleList as List<Model.ArticleMain_View>)
+            {
+                <!-- 文章标题和内容 -->
+                <input type="hidden" value="@art.aid" id="hidAid" />
+                <div class="am-u-sm-12">
+                    <div class="comarticle-right info-container">
+                        <article class="am-article">
+                            <div class="am-article-hd">
+                                <h1 class="am-article-title">@art.title</h1>
+                                <hr />
+                                <p class="am-article-meta">
+                                    作者：@art.author &nbsp;&nbsp;
+                                    发布人：@art.uname &nbsp;&nbsp;
+                                    时间：@art.ptime &nbsp;&nbsp;
+                                </p>
+                            </div>
+                            <br />
+                            <div class="am-article-bd">
+                                &nbsp;&nbsp;&nbsp;&nbsp;@art.ahtml
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            }
+        }
+        <div class="am-cf"></div>
+
+        <!-- 评论列表 -->
+        <div class="am-u-sm-12 am-comments-list">
+            <h2 class="am-text-right am-padding-top-lg">
+                评论 <span class="am-badge am-round am-badge-success">@ViewBag.commentSumCount</span>
+            </h2>
+            <hr />
+            <article class="am-comment">
+                @{
+                    foreach (var com in ViewBag.commentList as List<Model.CommentMain_View>)
+                    {
+                        <!-- 评论容器 -->
+                        <a href="/Front/Personal_Profile/Personal_Profile?uid=@com.uid">
+                            <!-- 评论者头像 -->
+                            <img src="~/images/face/@com.face" class="am-comment-avatar" alt="" />
+                        </a>
+
+                        <div class="am-comment-main">
+                            <!-- 评论内容容器 -->
+                            <header class="am-comment-hd">
+                                <!--<h3 class="am-comment-title">评论标题</h3>-->
+                                <div class="am-comment-meta">
+                                    <!-- 评论元数据 -->
+                                    <a class="am-comment-author">@com.uname</a> <!-- 评论者 -->
+                                    评论于 <time datetime="">@com.cmtime</time>
+                                </div>
+                            </header>
+                            <!-- 评论内容 -->
+                            <div class="am-comment-bd">
+                                @com.cmhtml
+                            </div>
+                        </div>
+                        <hr />
+                    }
+                }
+            </article>
+
+            <!-- 我要说两句 -->
+            <div class="am-u-sm-12 am-comments-list">
+                <h2 class="am-text-right am-padding-top-lg">
+                    <input type="hidden" value="@ViewBag.userID" id="hidUid" />
+                    我要说两句;<a href="/Login/Login" class="am-text-warning" id="hidIsLogin">请先登陆</a>
+                </h2>
+                <hr />
+
+                <!-- 富编辑器-Begin -->
+                <script src="~/ueditor/ueditor.config.js"></script>
+                <script src="~/ueditor/ueditor.all.min.js"></script>
+                <script src="~/ueditor/lang/zh-cn/zh-cn.js"></script>
+                <script id="editor" type="text/plain" style="width:100%;height:200px;">
+                </script>
+                <script>
+                    $(function () {
+                        var uid = $("#hidUid").val();
+                        if (uid == 0) {
+                            $("#hidIsLogin").attr("hidden");
+                        } else {
+                            $("#hidIsLogin").attr("hidden", "hidden");
+                        }
+                    });
+
+                    //文本框
+                    var ue = UE.getEditor('editor');
+                    function getContent() {
+                        var string = UE.getEditor('editor').getContentTxt();
+                        var uid = $("#hidUid").val();
+                        if (uid == 0) {
+                            alert("没有登录不能发言");
+                        } else {
+                            AddComment(string);
+                        }
+                    }
+
+                    //修改文章表中评论数
+                    function EditArticle() {
+                        var aid = $("#hidAid").val();
+                        $.ajax({
+                            type: "post",
+                            url: "/Front/Home/EditArticle",
+                            data: { aid: aid },
+                            dataType: "json",
+                            success: function (data) {
+                                if (data > 0) {
+
+                                }
+                            },
+                            error: function (errorData) {
+                                console.log(errorData.responseText);
+                            }
+                        });
+                    }
+
+                    //添加评论
+                    function AddComment(cmhtml) {
+                        var aid = $("#hidAid").val();
+                        var uid = $("#hidUid").val();
+                        $.ajax({
+                            type: "post",
+                            url: "/Front/Home/AddComment",
+                            data: { cmhtml: cmhtml, uid: uid, aid: aid },
+                            dataType: "json",
+                            success: function (data) {
+                                if (data > 0) {
+                                    location.href = "/Front/Home/LaceMian?id=" + aid;
+                                }
+                            },
+                            error: function (errorData) {
+                                alert(errorData.statusText);
+                                console.log(errorData.responseText);
+                            }
+                        });
+                    }
+                </script>
+                <!-- 富编辑器-End -->
+                <br />
+                <p class="am-align-right">
+                    <button onclick="getContent()" class="am-btn am-btn-success">提交</button>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <img src="~/images/demo3.jpg" />
+    </div>
+</div>

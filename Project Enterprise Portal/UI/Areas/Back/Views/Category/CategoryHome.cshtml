@@ -1,0 +1,89 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CategoryHome</title>
+    <link href="~/Areas/Back/easyui/1.5.2/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/wu.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/icon.css" rel="stylesheet" />
+    <script src="~/Areas/Back/js/jquery-1.10.2.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Areas/Back/js/common.js"></script>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'center',border:false">
+            <!-- Begin of toolbar -->
+            <div id="wu-toolbar">
+                <div class="wu-toolbar-button">
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-refresh" onclick="reload()" plain="true">刷新</a>
+                    |
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-edit" onclick="openEdit()" plain="true">修改</a>
+                </div>
+            </div>
+            <!-- End of toolbar -->
+            <table id="wu-datagrid" toolbar="#wu-toolbar"></table>
+        </div>
+    </div>
+    <script type="text/javascript">
+        /**
+        * Name 打开修改窗口
+        */
+        function openEdit(id) {
+            if (!id) {
+                var items = $('#wu-datagrid').datagrid('getSelections');
+                if (!items || items.length == 0) { $.messager.alert("提示", "请先选择您要修改的栏目"); return; }
+                if (items.length > 1) { $.messager.alert("提示", "请只选择一篇栏目"); return; }
+                id = items[0].cid;
+            }
+            window.top.addTab("修改栏目:" + id, "/Back/Category/EditPage?id=" + id, "icon-book-edit");
+        }
+
+        //刷新
+        function reload() {
+            $('#wu-datagrid').datagrid('reload');
+        }
+
+        $(function () {
+            /**
+            * Name 载入数据
+            */
+            $('#wu-datagrid').datagrid({
+                method: 'get',
+                url: '/Back/Category/Find',
+                rownumbers: true,
+                singleSelect: false,
+                pageSize: 20,
+                pagination: true,
+                multiSort: true,
+                fitColumns: true,
+                fit: true,
+                columns: [[
+                    { field: 'ck', checkbox: true },
+                    { field: 'cid', title: '编号', width: 100, sortable: true },
+                    { field: 'ctitle', title: '栏目名称', width: 100 },
+                    { field: 'cname', title: '栏目英文名', width: 100 },
+                ]]
+            });
+
+            /**
+            * Name 载入菜单树
+            */
+            $('#wu-category-tree').tree({
+                method: "get",
+                url: '../data/category.json',
+                onClick: function (node) {
+                    console.log(node.id, node.text);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

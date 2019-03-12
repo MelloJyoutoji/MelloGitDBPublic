@@ -1,0 +1,44 @@
+CMS_User 用户表
+  uid--编号
+  uname--用户名
+  upwd--密码
+  nname--昵称
+  mobile--手机号码
+  face--头像
+  admin--是否为管理员
+
+CMS_Keyword 热门关键字
+  kid--编号
+  keyword--关键字
+  stimes--搜索次数
+  ltimes--最后一次搜索时间
+  show--是否显示
+
+CMS_Category 栏目表
+  cid--编号
+  ctitle--栏目名称
+  cname--栏目英文名
+  nav--显示在导航
+  navorder--显示在导航上的顺序
+  search--是否被搜索
+
+CMS_Article 文章表
+  aid--编号 
+  cid--所属栏目
+  title--文章标题
+  author--作者
+  uid--发布人
+  ctime--创建时间
+  ptime--发布时间
+  istop--栏目置顶
+  state--状态:0删除 1草稿 2发布
+  hits--点击率
+  comments--评论数
+  ahtml--文章html内容
+
+CMS_Comment 评论表
+  cmid--编号
+  aid--所属文章
+  uid--评论人
+  cmtime--评论时间
+  cmhtml--评论html内容

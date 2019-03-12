@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "搜索列表";
+    Layout = "~/Views/_LayoutPage_Front.cshtml";
+}
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <img src="~/images/demo3.jpg" />
+    </div>
+</div>
+<hr />
+<!-- 搜索列表 -->
+<div class="comarticle">
+    <div class="cg">
+        <div class="am-u-sm-12">
+            <!-- 分页器 -->
+            <div id="pagination"></div>
+            <div class="comarticle-right">
+                <h1>列表</h1>
+                <ul id="ulList">
+                    @{
+                        foreach (var art in ViewBag.pageList as List<Model.ArticleMain_View>)
+                        {
+                            <li name="liList">
+                                <a href="/Front/Home/LaceMian?id=@art.aid">
+                                    <strong>@art.title</strong>
+                                    @if (art.ahtml.Length > 30)
+                                    {
+                                        <span>@art.ahtml.Substring(0, 30)...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@art.ahtml</span>
+                                    }
+                                    <h1><em>更新时间：@art.ptime</em><em>人气：@art.hits</em></h1>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <input type="hidden" name="sum" value="@ViewBag.pageSum" />
+        </div>
+    </div>
+</div>
+<hr />
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <a href="https://mages-lab.jp/"><img src="~/images/domo112.jpg" /></a>
+    </div>
+</div>
+

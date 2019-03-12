@@ -1,0 +1,14 @@
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\BLL.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\BLL.pdb
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\DAL.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\EntityFramework.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\EntityFramework.SqlServer.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\Model.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\DAL.pdb
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\Model.pdb
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\EntityFramework.xml
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\EntityFramework.SqlServer.xml
+I:\S4\Project\Project\Project Enterprise Portal\BLL\bin\Debug\zh-Hans\EntityFramework.resources.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\obj\Debug\BLL.csprojResolveAssemblyReference.cache
+I:\S4\Project\Project\Project Enterprise Portal\BLL\obj\Debug\BLL.dll
+I:\S4\Project\Project\Project Enterprise Portal\BLL\obj\Debug\BLL.pdb

@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="~/css/default.css" rel="stylesheet" />
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/layui/layui.js"></script>
+    <script src="~/Js/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                type: "get",
+                url: "/Login/GetSession",
+                data: null,
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    $("#session").val(data);
+                    if (data == 0) {
+                        $(".login").attr("hidden", "hidden");
+                        $(".nologin").attr("hidden");
+                    } else {
+                        $(".nologin").attr("hidden", "hidden");
+                        $(".login").attr("hidden");
+                        $("#uname").attr("href", "/Front/Personal_Profile/Personal_Profile?uid=" + data);
+                        FindUser(data);
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+
+            $("body").on("click", "[name='Search']", function () {
+                var tlti = $("[name = 'SearchText']").val();
+                console.log(tlti);
+                location.href = "/Front/Find/Search?tlti=" + tlti;
+            });
+        });
+
+        function FindUser(id) {
+            $.ajax({
+                type: "post",
+                url: "/Login/FindUser",
+                data: { id: id },
+                dataType: "json",
+                success: function (data) {
+                    $("#uname").text(data[0].uname);
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- 网站头部 -->
+    <header class="hd">
+        <div class="hd-top am-hide-sm-down">
+            <div class="cg">
+                <div class="hd-top-left">
+                    <a href="#">设为首页</a>
+                    <a href="#">收藏</a>
+                    <a href="#">RSS订阅</a>
+                </div>
+                <div class="hd-top-right">
+                    <span class="login">云阿拉丁商务账户: <a id="uname" style="color:#ff0000"></a></span>
+                    <span class="login"></span>
+                    @Html.Hidden("session")
+                    <a href="/Login/Register" class="nologin">注册</a>
+                    <a href="/Login/Login" class="nologin">登录</a>
+                </div>
+            </div>
+        </div>
+        <div class="cg">
+            <div class="hd-search">
+                <div class="hd-search-left">
+                    <a href="/Front/Home/Index"><img src="~/images/logo.jpg" /></a>
+                </div>
+                <div class="hd-search-right">
+                    <div class="hd-search-right-input">
+                        <input type="text" name="SearchText" value="" placeholder="搜索" />
+                        <button class="font" name="Search">&nbsp;&#xe634;&nbsp;</button>
+                    </div>
+                    <div class="hd-search-right-keyword">
+                        @foreach (var key in ViewBag.keyList as List<Model.CMS_Keyword>)
+                        {
+                            <a href="/Front/Find/Search?tlti=@key.keyword">@key.keyword</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hd-bottom">
+            <div class="cg">
+                <div class="hd-bottom-category">
+                    <!-- 需要到这里开通：http://shang.qq.com/v3/widget.html  -->
+                    <h1><a href="http://wpa.qq.com/msgrd?v=3&uin=1643879045&site=qq&menu=yes" target="_blank" class="am-icon-qq">业务咨询QQ</a></h1>
+                </div>
+                <div class="hd-bottom-nav" id="my-modal">
+                    <ul>
+                        <li class=""><a href="/Front/Home/Index">首页</a></li>
+                        <li class=""><a href="/Front/Home/AritcleList?id=2">产品中心</a></li>
+                        <li class=""><a href="/Front/Home/AritcleList?id=3">定制服务</a></li>
+                        <li class=""><a href="/Front/Home/AritcleList?id=4">成功案例</a></li>
+                        <li class=""><a href="/Front/Home/AritcleList?id=5">关于我们</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div>
+        @RenderBody()
+    </div>
+    <!-- 页脚 -->
+    ﻿<footer class="footer">
+        <div class="cg">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                    <div class="footer-div1 am-hide-md-down">
+                        <h1>关于我们</h1>
+                        <div class="footer-div1-top">
+                            <img src="~/images/footer.jpg" />
+                            <span><em>大冶市云阿拉丁科技有限公司成立于2015</em></span>
+                        </div>
+                        <div class="footer-div1-bottom">
+                            云阿拉丁科技有限公司创建于2015年1月5日，总部位于青铜故里——大冶市。公司致力于帮助传统行业力
+                        </div>
+                        <em><a href="http://mages.co.jp/about/company/">阅读更多>></a></em>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+                    <div class="footer-div2 am-hide-md-down">
+                        <h1>职位招聘</h1>
+                        <ul>
+                            <li><a href="#">招聘销售专员销售管理人员</a></li>
+                            <li><a href="#">市场销售</a></li>
+                            <li><a href="#">营销客服经理</a></li>
+                            <li><a href="#">涉外律师</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-6">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                    <div class="footer-div3 am-hide-md-down">
+                        <h1>联系我们</h1>
+                        <ul>
+                            <li><i>&#xe617;</i>地址 Add : 大冶市大冶大道116号2栋金穗小区B幢201房</li>
+                            <li><i>&#xe601;</i>电话Tel：(86) 0714-8868331</li>
+                            <li><i>&#xe602;</i>传真Fax：(86) 0714-8868331</li>
+                            <li><i>&#xe691;</i>dayeyunalading.com</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
+                    <div class="footer-div3 am-hide-md-down">
+                        <h1>关注我们</h1>
+                        <ul>
+                            <li><em>&#xe644;</em><b>新浪微博</b></li>
+                            <li><em>&#xe6c9;</em><b>优酷</b></li>
+                            <li><em>&#xe66f;</em><b>微信</b></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="footer-bottom am-hide-md-down">
+                    <div class="footer-bottom-link">
+                        <div class="am-u-sm-3 am-u-md-2 am-u-lg-2"><span>友情链接：</span></div>
+                        <div class="am-u-sm-9 am-u-md-10 am-u-lg-10">
+                            <strong>
+                                <a href="#">北京网站建设</a>
+                                <a href="#">网站建设</a>
+                                <a href="#">网站设计</a>
+                                <a href="#">合肥网站建设</a>
+                                <a href="#">网站建设</a>
+                                <a href="#">网店系统</a>
+                                <a href="#">企业网站建设</a>
+                                <a href="#">上海网站设计</a>
+                                <a href="#">香港服务器</a>
+
+                                <a href="#">网站建设</a>
+                                <a href="#">网店系统</a>
+                                <a href="#">企业网站建设</a>
+                                <a href="#">上海网站设计</a>
+                                <a href="#">香港服务器</a>
+
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+                <h2>申请友情链接请联系QQ：00000000</h2>
+                <h3>2015-2016 版权所有 云阿拉丁商务有限公司.</h3>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

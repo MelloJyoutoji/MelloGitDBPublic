@@ -1,0 +1,112 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="~/Areas/Back/easyui/1.5.2/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/wu.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/icon.css" rel="stylesheet" />
+    <script src="~/Areas/Back/js/jquery-1.10.2.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Areas/Back/js/common.js"></script>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <!-- Begin of toolbar -->
+        <div id="wu-toolbar-2">
+            <div class="wu-toolbar-button">
+                <a href="#" class="easyui-linkbutton" iconcls="icon-edit" onclick="edit()" plain="true">设置或取消管理员身份</a>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-remove" onclick="remove()" plain="true">删除</a>
+                <a href="#" class="easyui-linkbutton" iconcls="icon-reload" onclick="reload()" plain="true">刷新</a>
+            </div>
+            <div class="wu-toolbar-search">
+                <label>用户名：</label><input name="Uname" class="wu-text" style="width:100px">
+                <a href="#" name="search" class="easyui-linkbutton" iconcls="icon-search">开始检索</a>
+            </div>
+        </div>
+        <!-- End of toolbar -->
+        <table id="userData" class="easyui-datagrid" toolbar="#wu-toolbar-2"></table>
+    </div>
+    <script>
+        $(function () {
+            GetData();
+            $("body").on("click", "[name='search']", function () {
+                GetDataFilter();
+            });
+        });
+
+        //查询全部
+        function GetData() {
+            $('#userData').datagrid({
+                method: 'post',
+                url: '/Back/User/Find',
+                rownumbers: true,
+                singleSelect: false, //多行可选
+                pagination: true, //启用分页
+                pageSize: 20, //每页分多少条
+                pageNumber: 1, //默认第1页
+                multiSort: true, //允许多列排序
+                fitColumns: true, //自适应列宽
+                columns: [[  //表格中显示的列
+                    { field: 'ck', checkbox: true },
+                    { field: 'uid', title: '编号', width: 100, sortable: true },
+                    { field: 'uname', title: '用户名', width: 180, sortable: true },
+                    { field: 'nname', title: '昵称', width: 100 },
+                    { field: 'mobile', title: '手机号码', width: 100 },
+                    { field: 'admin', title: '是否为管理员', width: 100 },
+                ]]
+            });
+        }
+
+        //条件查询
+        function GetDataFilter() {
+            $('#userData').datagrid('load', {
+                Uname: $("[name='Uname']").val(),
+            });
+        }
+
+        //刷新
+        function reload() {
+            $('#userData').datagrid('reload');
+        }
+
+        //修改
+        function edit() {
+            var items = $('#userData').datagrid('getSelections');
+            if (!items || items.length == 0) { $.messager.alert("提示", "请先选择您要修改的用户"); return; }
+            var uid = items[0].uid;
+            $.ajax({
+                type: "post",
+                url: "/Back/User/Edit",
+                data: { uid: uid },
+                dataType: "json",
+                success: function (data) {
+                    if (data > 0) {
+                        alert("更变成功");
+                        reload();
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+
+        //删除
+        function remove() {
+            var items = $('#userData').datagrid('getSelections');
+            if (!items || items.length == 0) { $.messager.alert("提示", "请先选择您要修改的用户"); return; }
+            $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+
+            });
+        }
+    </script>
+</body>
+</html>
+

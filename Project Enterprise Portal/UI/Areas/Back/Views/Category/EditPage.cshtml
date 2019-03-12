@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditPage</title>
+    <link href="~/Areas/Back/easyui/1.5.2/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/wu.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/icon.css" rel="stylesheet" />
+    <script src="~/Areas/Back/js/jquery-1.10.2.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Areas/Back/js/common.js"></script>
+</head>
+<body>
+    <div style="margin:20px 0;"></div>
+    <div title="修改文章" style="width:98%;padding:30px 60px;" class="easyui-panel">
+        <form id="ff" class="easyui-form" method="post" data-options="novalidate:true">
+            <input type="hidden" name="cid" />
+            <div style="margin-bottom:20px">
+                <input name="ctitle" data-options="label:'栏目名称:',required:true" class="easyui-textbox" style="width:100%;max-width:400px;">
+            </div>
+
+            <div style="margin-bottom:20px">
+                <input name="cname" data-options="label:'栏目英文名:'" class="easyui-textbox" style="width:100%;max-width:400px;">
+            </div>
+            <div style="margin-bottom:20px">
+                <input name="nav" data-options="label:'显示在导航:'" readonly class="easyui-textbox" style="width:100%;max-width:400px;background-color:#d9d9d9;">
+            </div>
+            <div style="margin-bottom:20px">
+                <input name="navorder" data-options="label:'显示在导航上的顺序:'" readonly class="easyui-textbox" style="width:100%;max-width:400px;">
+            </div>
+            <div style="margin-bottom:20px">
+                是否被搜索: &nbsp;&nbsp;@Html.RadioButton("search", "true", true) 是
+                @Html.RadioButton("search", "false") 否 <br />
+            </div>
+        </form>
+        <div style="text-align:center;padding:5px 0">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:120px" data-options="iconCls:'icon-save'">修改</a>
+        </div>
+    </div>
+    <script>
+        var cid;
+        $(function () {
+            cid = window.location.href.split("=")[1];
+            if (cid == null) {
+                location.href = "/Back/Home/Index";
+            }
+            $.ajax({
+                type: "post",
+                url: "/Back/Category/FindByID",
+                data: { cid: cid },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $('#ff').form('load', data);
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        });
+        function submitForm() {
+            $('#ff').form({
+                url: "/Back/Category/Edit",
+                success: function (data) {
+                    if (data > 0) {
+                        $.messager.alert('提示', '提交成功!');
+                        location.href = "/Back/Category/CategoryHome";
+                    }
+                }
+            });
+            $('#ff').submit();
+        }
+        function clearForm() {
+            $('#ff').form('clear');
+        }
+    </script>
+</body>
+</html>

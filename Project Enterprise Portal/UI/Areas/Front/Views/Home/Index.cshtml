@@ -1,0 +1,137 @@
+﻿@{
+    ViewBag.Title = "云阿拉丁商务 - 您身边的解决方案专家";
+    Layout = "~/Views/_LayoutPage_Front.cshtml";
+}
+
+<style>
+    #cgs {
+        background-image: url('../../../../images/demo3.jpg');
+    }
+</style>
+<script>
+    layui.use(['carousel', 'form'], function () {
+        var carousel = layui.carousel
+            , form = layui.form;
+        carousel.render({
+            elem: '#ggb'
+            , arrow: 'always'
+        });
+    });
+</script>
+
+<!-- 网站公告 -->
+<div class="notice">
+    <div class="cg">
+        <!-- 左边 -->
+        <div class="am-u-sm-12 am-u-md-8">
+            <div class="notice-left">
+                <div class="notice-left-img" id="noticeimg">
+                    <img src="~/images/demo1.jpg" />
+                </div>
+            </div>
+        </div>
+        <!-- 右边 -->
+        <div class="am-u-sm-12 am-u-md-4">
+            <div class="notice-right">
+                <div class="notice-right-div">
+                    <h1 class="comh1">
+                        网站公告
+                        <em>
+                            <a href="/Front/Home/AritcleList?id=1"><i>MORE &#xe696;</i></a>
+                        </em>
+                    </h1>
+                    @foreach (var arti in ViewBag.listIsTop as List<Model.ArticleMain_View>)
+                    {
+                        <strong>「置顶栏目」<a href="/Front/Home/LaceMian?id=@arti.aid">@arti.title</a></strong>
+                    }
+                    <ul>
+                        @foreach (var arti in ViewBag.NoticeList as List<Model.ArticleMain_View>)
+                        {
+                            <li><a href="/Front/Home/LaceMian?id=@arti.aid"><span>@arti.title</span></a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <a href="http://mages.co.jp/recruit/message/"><img src="~/images/demo3.jpg" /></a>
+    </div>
+</div>
+
+<!-- 文章组 -->
+<div class="index-category">
+    <div class="cg">
+        <div class="am-u-sm-12 am-u-md-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    产品中心
+                    <em>
+                        <a href="/Front/Home/AritcleList?id=2"><i>MORE &#xe696;</i></a>
+                    </em>
+                </h1>
+                <img src="~/images/demo4.jpg" />
+                <ul class="comcategory">
+                    @foreach (var arti in ViewBag.ProductList as List<Model.ArticleMain_View>)
+                    {
+                        <li><a href="/Front/Home/LaceMian?id=@arti.aid"><span>@arti.title</span><i>@arti.ptime</i></a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-4">
+            <div class="index-category-left">
+                <h1 class="comh1">
+                    定制服务
+                    <em>
+                        <a href="/Front/Home/AritcleList?id=3"><i>MORE &#xe696;</i></a>
+                    </em>
+                </h1>
+                <img src="~/images/demo5.jpg" />
+                <ul class="comcategory">
+                    @foreach (var arti in ViewBag.ServiceList as List<Model.ArticleMain_View>)
+                    {
+                        <li><a href="/Front/Home/LaceMian?id=@arti.aid"><span>@arti.title</span><i>@arti.ptime</i></a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="am-u-sm-12 am-u-md-4">
+            <div class="index-category-left index-category-right">
+                <h1 class="comh1">
+                    成功案例
+                    <em>
+                        <a href="/Front/Home/AritcleList?id=4"><i>MORE &#xe696;</i></a>
+                    </em>
+                </h1>
+                <img src="~/images/demo5.jpg" />
+                <ul class="comcategory">
+                    @foreach (var arti in ViewBag.CaseList as List<Model.ArticleMain_View>)
+                    {
+                        <li><a href="/Front/Home/LaceMian?id=@arti.aid"><span>@arti.title</span><i>@arti.ptime</i></a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <!-- 第三组文章end -->
+    </div>
+</div>
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg" align="center" id="cgs">
+        <div class="layui-carousel" id="ggb" lay-filter="test1">
+            <div carousel-item="">
+                <div><a href="http://roboticsnotes.jp/"><img src="~/images/MAGES.01.jpg" /></a></div>
+                <div><a href="http://anonymouscode.jp/"><img src="~/images/MAGES.02.jpg" /></a></div>
+                <div><a href="http://steinsgate.jp/elite/"><img src="~/images/MAGES.03.jpg" /></a></div>
+                <div><a href="http://steinsgate.jp/assort/"><img src="~/images/MAGES.04.jpg" /></a></div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,12 @@
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\DAL.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\DAL.pdb
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\EntityFramework.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\EntityFramework.SqlServer.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\Model.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\Model.pdb
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\EntityFramework.xml
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\EntityFramework.SqlServer.xml
+I:\S4\Project\Project\Project Enterprise Portal\DAL\bin\Debug\zh-Hans\EntityFramework.resources.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\obj\Debug\DAL.csprojResolveAssemblyReference.cache
+I:\S4\Project\Project\Project Enterprise Portal\DAL\obj\Debug\DAL.dll
+I:\S4\Project\Project\Project Enterprise Portal\DAL\obj\Debug\DAL.pdb

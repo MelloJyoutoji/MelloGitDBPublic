@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "云阿拉丁商务:文章列表";
+    Layout = "~/Views/_LayoutPage_Front.cshtml";
+}
+
+<script>
+    layui.use(['laypage', 'layer'], function () {
+        var laypage = layui.laypage,
+        layer = layui.layer;
+        var sum = $("[name='sum']").val();
+
+        laypage.render({
+            elem: 'pagination',
+            count: sum,//数据总数
+            layout: ['count', 'prev', 'page', 'next'],
+            jump: function (obj, first) {
+                var id = window.location.search.split("=")[1];
+                if (!first) {
+                    FindPage(id, obj.curr);
+                }
+            }
+        });
+
+        function FindPage(id, page) {
+            $.ajax({
+                type: "post",
+                url: "/Front/Home/FindPage",
+                data: { id: id, page: page },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $("[name='liList']").remove();
+                    $.each(data, function (index, v) {
+                        var li = $("<li name='liList'></li>");
+                        var a = $("<a href='/Front/Home/LaceMian?id=" + v.aid + "'></a>");
+                        var strong = $("<strong></strong>").text(v.title);
+                        var span = $("<span></span>").text(v.ahtml);
+                        var h1 = $("<h1></h1>");
+                        var em01 = $("<em></em>").text("更新时间: " + v.ptime);
+                        var em02 = $("<em></em>").text("人气: " + v.hits);
+                        h1.append(em01, em02);
+                        a.append(strong, span, h1);
+                        li.append(a);
+                        $("#ulList").append(li);
+                    });
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+    });
+</script>
+
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <a href="https://mages-lab.jp/"><img src="~/images/domo112.jpg" /></a>
+    </div>
+</div>
+<hr />
+<!-- 内容 -->
+<div class="comarticle">
+    <div class="cg">
+        <div class="am-u-sm-12">
+            <!-- 分页器 -->
+            <div id="pagination"></div>
+            <div class="comarticle-right">
+                <h1>列表</h1>
+                <ul id="ulList">
+                    @{
+                        foreach (var art in ViewBag.pageList as List<Model.ArticleMain_View>)
+                        {
+                            <li name="liList">
+                                <a href="/Front/Home/LaceMian?id=@art.aid">
+                                    <strong>@art.title</strong>
+                                    @if (art.ahtml.Length > 30)
+                                    {
+                                        <span>@art.ahtml.Substring(0, 30)...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@art.ahtml</span>
+                                    }
+                                    <h1><em>更新时间：@art.ptime</em><em>人气：@art.hits</em></h1>
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <input type="hidden" name="sum" value="@ViewBag.pageSum" />
+        </div>
+    </div>
+</div>
+<hr />
+<!-- 广告 -->
+<div class="ads">
+    <div class="cg">
+        <img src="~/images/demo3.jpg" />
+    </div>
+</div>

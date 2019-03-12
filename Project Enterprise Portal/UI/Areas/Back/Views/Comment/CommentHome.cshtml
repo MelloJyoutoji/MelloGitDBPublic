@@ -1,0 +1,100 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CommentHome</title>
+    <link href="~/Areas/Back/easyui/1.5.2/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/wu.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/icon.css" rel="stylesheet" />
+    <script src="~/Areas/Back/js/jquery-1.10.2.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Areas/Back/js/common.js"></script>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'center',border:false">
+            <!-- Begin of toolbar -->
+            <div id="wu-toolbar">
+                <div class="wu-toolbar-button">
+                    <a href="#" class="easyui-linkbutton" iconcls="icon-refresh" onclick="reload()" plain="true">刷新</a>
+                </div>
+                <div class="wu-toolbar-search">
+                    <label>文章编号：</label><input name="aid" class="wu-text" style="width:100px">
+                    <label>用户编号：</label><input name="uid" class="wu-text" style="width:100px">
+                    <a href="#" name="search" class="easyui-linkbutton" iconcls="icon-search">开始检索</a>
+                </div>
+            </div>
+            <!-- End of toolbar -->
+            <table id="wu-datagrid" toolbar="#wu-toolbar"></table>
+        </div>
+    </div>
+    <!-- Begin of easyui-dialog -->
+    <!-- End of easyui-dialog -->
+    <script type="text/javascript">
+        //刷新
+        function reload() {
+            $('#wu-datagrid').datagrid('reload');
+        }
+
+        $(function () {
+            /**
+            * Name 载入数据
+            */
+            $('#wu-datagrid').datagrid({
+                method: 'get',
+                url: '/back/Comment/Find',
+                rownumbers: true,
+                singleSelect: false,
+                pageSize: 20,
+                pagination: true,
+                multiSort: true,
+                fitColumns: true,
+                fit: true,
+                columns: [[
+                    { field: 'ck', checkbox: true },
+                    { field: 'cmid', title: '编号', width: 100, sortable: true },
+                    {
+                        field: 'title', title: '所属文章', width: 100,
+                        formatter: function (value, row, index) {
+                            return '<a style="color:blue" target="_blank" href="/Front/Home/LaceMian?id=' + row.aid + '" >' + row.title;
+                        }
+                    },
+                    { field: 'uname', title: '评论人', width: 100 },
+                    {
+                        field: 'cmtime', title: '评论时间', width: 100,
+                        formatter: function (value, row, index) { //格式化列
+                            return ConvertToDate(value);
+                        }
+                    },
+                ]]
+            });
+
+            $("body").on("click", "[name='search']", function () {
+                GetDataFilter();
+                console.log($("[name='uid']").val());
+            });
+        });
+
+        //条件查询
+        function GetDataFilter() {
+            $('#wu-datagrid').datagrid('load', {
+                uid: $("[name='uid']").val(),
+                aid: $("[name='aid']").val(),
+            });
+        }
+
+        //转换日期
+        function ConvertToDate(strDate) {
+            strDate = strDate.replace("/Date(", "").replace(")/", "");
+            var date = new Date(parseInt(strDate));
+            return date.getFullYear() + "-" + (parseInt(date.getMonth()) + 1) + "-" + date.getDate();
+        }
+    </script>
+</body>
+</html>

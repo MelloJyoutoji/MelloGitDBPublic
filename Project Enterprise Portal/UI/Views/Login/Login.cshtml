@@ -1,0 +1,112 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>登陆</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="~/css/default.css" rel="stylesheet" />
+    <script src="~/Js/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function () {
+            //用户名鼠标离开事件
+            $("body").on("blur", "[name='username']", function () {
+                var uname = $("[name='username']").val();
+                if (uname != "") {
+                    FindUname(uname);
+                }
+            });
+            //点击登录事件
+            $("body").on("click", "#loginBut", function () {
+                var uname = $("[name='username']").val();
+                var pwd = $("[name='password']").val();
+                if (uname != "" && pwd != "") {
+                    Login(uname, pwd);
+                } else {
+                    alert("你妈的, 为什么");
+                }
+            });
+        });
+
+        //查找用户名
+        function FindUname(uname) {
+            $.ajax({
+                type: "post",
+                url: "/Login/FindUname",
+                data: { uname: uname },
+                dataType: "json",
+                success: function (data) {
+                    if (data == 0) {
+                        alert("并没有此用户哦,请认真并准确的输入");
+                        $("[name='username']").val("");
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+
+        //登陆方法
+        function Login(uname, pwd) {
+            $.ajax({
+                type: "post",
+                url: "/Login/ResponseLogin",
+                data: { uname: uname, pwd: pwd },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data.length > 0) {
+                        window.location = "/Front/Home/Index";
+                    } else {
+                        alert("密码错误");
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    ﻿<header class="hd1">
+        <div class="cg">
+            <div class="hd1-left">
+                <a href="/Front/Home/Index"><img src="~/images/logo.jpg" /></a>
+                <a href="/Front/Home/Index"><img class="am-show-md-down" src="~/images/logo-sm.jpg" /></a>
+            </div>
+            <div class="hd1-right">
+                <a href="#" class="cur">登录</a>
+                <a href="/Login/Register">注册</a>
+            </div>
+        </div>
+    </header>
+    <div class="user">
+        <div class="cgs">
+            <div class="am-u-sm-12 am-u-md-7">
+                <div class="user-div">
+                    <h1>用户登录</h1>
+                    <ul>
+                        <li><i>&#xe681;</i><input type="text" name="username" value="" placeholder="请输入用户名" /></li>
+                        <li><i>&#xe680;</i><input type="password" name="password" value="" placeholder="请输入密码" /></li>
+                    </ul>
+                    <button id="loginBut">登录</button>
+                </div>
+            </div>
+            <div class="am-hide-sm am-u-md-5">
+                <div class="user-right">
+                    <a href="/Login/Register">还没有帐号</a>
+                    <button onclick="location.href = '/Login/Register';">立即注册</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

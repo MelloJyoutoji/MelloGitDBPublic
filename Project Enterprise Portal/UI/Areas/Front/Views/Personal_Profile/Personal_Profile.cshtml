@@ -1,0 +1,224 @@
+﻿@{
+    ViewBag.Title = "个人资料页";
+    Layout = "~/Views/_LayoutPage_Front.cshtml";
+}
+
+<link href="~/layui/css/layui.css" rel="stylesheet" />
+<script src="~/layui/layui.js"></script>
+<script src="~/Js/jquery-1.10.2.min.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'upload', 'element'], function () {
+        var form = layui.form
+        , layer = layui.layer
+        , layedit = layui.layedit
+        , upload = layui.upload;
+        var $ = layui.jquery
+             , element = layui.element;
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '用户名昵称至少得5个字符啊';
+                }
+            }
+          , pass: [
+            /^[\S]{6,24}$/
+            , '密码必须6到24位，且不能出现空格'
+          ]
+          , content: function (value) {
+              layedit.sync(editIndex);
+          }
+        });
+
+        //文件上传
+        var uploadInst = upload.render({
+            elem: '#fiup',
+            url: '@Url.Action("Upload", "Personal_Profile")',
+            field: 'file',
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+                if (res.Result) {
+                    return layer.msg('上传成功,请手动刷新页面');
+                }
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+
+    var uid;
+    //加载方法
+    $(function () {
+        uid = $("#uid").val();
+        $("body").on("blur", "[name='oldpwd']", function () {
+            var oldpwd = $("[name='oldpwd']").val();
+            if (oldpwd != "") {
+                FindUserINPP(oldpwd);
+            }
+        });
+    });
+
+    //测试旧密码是否异常
+    function FindUserINPP(oldpwd) {
+        $.ajax({
+            type: "post",
+            url: "/Front/Personal_Profile/FindinPwd",
+            data: { oldpwd: oldpwd, uid: uid },
+            dataType: "json",
+            success: function (data) {
+                if (data.length == 0) {
+                    alert("旧密码错误");
+                    $("[name='oldpwd']").val("");
+                } else {
+
+                }
+            },
+            error: function (errorData) {
+                console.log(errorData.responseText);
+            }
+        });
+    }
+</script>
+
+<div class="comarticle">
+    <div class="cg">
+        <hr />
+
+        <hr />
+
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">用户资料</li>
+                <li>详细资料</li>
+                <li>修改密码</li>
+                <li>头像修改</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    @foreach (var key in ViewBag.userList as List<Model.CMS_User>)
+                    {
+                    <input type="hidden" value="@key.uid" id="uid" />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">头像</label>
+                        <div class="layui-input-block">
+                            <img src="~/images/face/@key.face" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="uname" lay-verify="title" autocomplete="off" disabled="" placeholder="请输入用户名" value="@key.uname" class="layui-input">
+                        </div>
+                    </div>
+                    }
+                </div>
+                <div class="layui-tab-item">
+                    <form class="layui-form layui-form-pane" action="">
+                        @foreach (var key in ViewBag.userList as List<Model.CMS_User>)
+                        {
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户编号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="uid" lay-verify="text" disabled="" value="@key.uid" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">电话号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="mobile" lay-verify="text" disabled="" value="@key.mobile" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="uname" lay-verify="text" disabled="" value="@key.uname" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">昵称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="nname" lay-verify="text" disabled="" value="@key.nname" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">是否管理员</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="admin" lay-verify="text" disabled="" value="@key.admin" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">回复数</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="comSum" lay-verify="text" disabled="" value="@ViewBag.countInCommentSum" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        }
+                    </form>
+                </div>
+                <div class="layui-tab-item">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">当前密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="oldpwd" lay-verify="pass" placeholder="请输入旧密码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">新密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="newpwd" lay-verify="pass" placeholder="请输入新密码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">确认新密码</label>
+                            <div class="layui-input-block">
+                                <input type="password" name="newpwds" lay-verify="pass" placeholder="请确认新密码" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">头像</label>
+                        <div class="layui-input-block">
+                            <div class="layui-upload">
+                                <button type="button" class="layui-btn" id="fiup">上传图片</button>
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" id="demo1">
+                                    <p id="demoText"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

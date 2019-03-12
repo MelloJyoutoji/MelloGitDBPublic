@@ -1,0 +1,98 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HomePage</title>
+    <link href="~/Areas/Back/easyui/1.5.2/themes/default/easyui.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/wu.css" rel="stylesheet" />
+    <link href="~/Areas/Back/css/icon.css" rel="stylesheet" />
+    <script src="~/Areas/Back/js/jquery-1.10.2.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/jquery.easyui.min.js"></script>
+    <script src="~/Areas/Back/easyui/1.5.2/locale/easyui-lang-zh_CN.js"></script>
+    <script src="~/Areas/Back/js/common.js"></script>
+</head>
+<body>
+    <div class="easyui-layout" data-options="fit:true">
+        <table id="wu-datagrid-comment" class="easyui-datagrid" title="最新评论"></table>
+        <br />
+        <br />
+        <table id="wu-datagrid-user" class="easyui-datagrid" title="最新注册的用户"></table>
+        <br />
+        <br />
+        <table id="wu-datagrid-article" class="easyui-datagrid" title="最近创建的文章"></table>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            GetComment();
+            GetUser();
+            GetArticle();
+        });
+
+        //得到评论表数据
+        function GetComment() {
+            $('#wu-datagrid-comment').datagrid({
+                method: 'post', //请求方式
+                url: '/Back/Home/FindComment', //AJAX请求地址
+                collapsible: true,
+                singleSelect: true, //每次仅能选择一行
+                fitColumns: true, //自适应列宽
+                columns: [[
+                    { field: 'cmid', title: '评论编号', width: 100 },
+                    {
+                        field: 'cmtime', title: '评论时间', width: 180,
+                        formatter: function (value, row, index) { //格式化列
+                            return ConvertToDate(value);
+                        }
+                    },
+                    { field: 'cmhtml', title: '评论内容', width: 100 }
+                ]]
+            });
+        }
+
+        //得到用户表数据
+        function GetUser() {
+            $('#wu-datagrid-user').datagrid({
+                method: 'post', //请求方式
+                url: '/Back/Home/FindUser', //AJAX请求地址
+                collapsible: true,
+                singleSelect: true, //每次仅能选择一行
+                fitColumns: true, //自适应列宽
+                columns: [[
+                    { field: 'uid', title: '用户编号', width: 100 },
+                    { field: 'uname', title: '用户名', width: 180 },
+                    { field: 'mobile', title: '手机号码', width: 100 },
+                ]]
+            });
+        }
+
+        //得到文章表数据
+        function GetArticle() {
+            $('#wu-datagrid-article').datagrid({
+                method: 'post',
+                url: '/Back/Home/FindArticle',
+                collapsible: true,
+                singleSelect: true,
+                fitColumns: true,
+                columns: [[
+                    { field: 'aid', title: '文章编号', width: 100 },
+                    { field: 'title', title: '文章标题', width: 180 },
+                    { field: 'author', title: '作者', width: 100 },
+                ]]
+            });
+        }
+
+        //转换日期
+        function ConvertToDate(strDate) {
+            strDate = strDate.replace("/Date(", "").replace(")/", "");
+            var date = new Date(parseInt(strDate));
+            return date.getFullYear() + "-" + (parseInt(date.getMonth()) + 1) + "-" + date.getDate();
+        }
+    </script>
+</body>
+</html>

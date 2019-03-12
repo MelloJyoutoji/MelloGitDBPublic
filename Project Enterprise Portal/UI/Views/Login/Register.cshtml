@@ -1,0 +1,123 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>注册</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="~/css/default.css" rel="stylesheet" />
+    <script src="~/Js/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function () {
+            //用户名输入框失焦事件
+            $("body").on("blur", "[name='username']", function () {
+                var uname = $("[name='username']").val();
+                if (uname != "") {
+                    FindUname(uname);
+                }
+            });
+            //点击注册事件
+            $("body").on("click", "#registerBut", function () {
+                var uname = $("[name='username']").val();
+                var pwd = $("[name='password']").val();
+                var mobile = $("[name='mobile']").val();
+                var confirm_pwd = $("[name='confirm_pwd']").val();
+                if (confirm_pwd != pwd) {
+                    alert("两次密码不一致");
+                    $("[name='confirm_pwd']").val("");
+                } else {
+                    if (uname != "" && pwd != "" && mobile != "") {
+                        Register(uname, pwd, mobile);
+                    } else {
+                        alert("你妈的, 为什么");
+                    }
+                }
+            });
+        });
+
+        //查找用户名
+        function FindUname(uname) {
+            $.ajax({
+                type: "post",
+                url: "/Login/FindUname",
+                data: { uname: uname },
+                dataType: "json",
+                success: function (data) {
+                    if (data == 1) {
+                        alert("这个用户名已经被注册了哦");
+                        $("[name='username']").val("");
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+
+        //注册
+        function Register(uname, pwd, mobile) {
+            $.ajax({
+                type: "post",
+                url: "/Login/ResponseRegister",
+                data: { uname: uname, pwd: pwd, mobile: mobile },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    if (data > 0) {
+                        alert("注册成功");
+                        window.location = "/Login/Login";
+                    }
+                },
+                error: function (errorData) {
+                    console.log(errorData.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header class="hd1">
+        <div class="cg">
+            <div class="hd1-left">
+                <a href="/Front/Home/Index"><img src="~/images/logo.jpg" /></a>
+                <a href="/Front/Home/Index"><img class="am-show-md-down" src="~/images/logo-sm.jpg" /></a>
+            </div>
+            <div class="hd1-right">
+                <a href="/Login/Login">登录</a>
+                <a href="#" class="cur">注册</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="user">
+        <div class="cgs">
+            <div class="am-u-sm-12 am-u-md-7">
+                <div class="user-div">
+                    <h1>用户注册</h1>
+                    <ul>
+                        <li><i>&#xe681;</i><input type="text" name="username" value="" placeholder="请输入用户名" /></li>
+                        <li><i>&#xe680;</i><input type="password" name="password" value="" placeholder="请输入密码" /></li>
+                        <li><i>&#xe680;</i><input type="password" name="confirm_pwd" value="" placeholder="请确认密码" /></li>
+                        <li><i>&#xe6ed;</i><input type="text" name="mobile" value="" placeholder="请输入手机号" /></li>
+                    </ul>
+                    <span><input type="checkbox" name="name" value="" />我已阅读并接受<a href="#">版权说明和隐私保护条款</a></span>
+                    <button id="registerBut">注册</button>
+                </div>
+            </div>
+            <div class="am-hide-sm am-u-md-5">
+                <div class="user-right">
+                    <a href="/Login/Login">已有帐号</a>
+                    <button onclick="location.href = '/Login/Login';">立即登录</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
